@@ -1,0 +1,19 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: node-red-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-deployment
+  minReplicas: 3
+  maxReplicas: 50
+  metrics:
+    - type: External
+      external:
+        metricName: custom.googleapis.com|nginx-ingress-controller|nginx_ingress_controller_nginx_process_connections
+        metricSelector: 
+          matchLabels:
+            metric.labels.state: writing
+        targetAverageValue: 900m

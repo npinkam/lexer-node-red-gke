@@ -1,0 +1,25 @@
+# my-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  selector:
+    matchLabels:
+      app: node-red-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node-red-app
+    spec:
+      containers:
+      - name: node-app
+        image: gcr.io/node-app-prome/node-red-app:latest
+        volumeMounts:
+        - mountPath: /app/userDir
+          name: node-app-storage
+      volumes:
+        - name: node-app-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc
